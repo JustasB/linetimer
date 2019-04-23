@@ -1,0 +1,6 @@
+rm -R dist/*
+
+/home/justas/anaconda2/envs/pb35/bin/python setup.py sdist bdist_wheel
+/home/justas/anaconda2/envs/p27/bin/python setup.py sdist bdist_wheel
+
+/home/justas/anaconda2/envs/p27/bin/python -m twine upload dist/*
