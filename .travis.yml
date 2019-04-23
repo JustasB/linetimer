@@ -1,0 +1,12 @@
+language: python
+cache: pip
+python:
+  - "2.7"
+  - "3.5"
+install:
+  - pip install pytest-cov codecov
+  - python setup.py develop
+script:
+  - py.test --cov=linetimer tests/
+after_success:
+  - codecov
