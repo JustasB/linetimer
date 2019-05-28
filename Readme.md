@@ -44,7 +44,7 @@ Code block 'loop 1' took: 4.991 ms
 Code block 'loop 2' took: 3.666 ms
 ```
 
-And nest them:
+And **nest** them:
 
 ```
 with CodeTimer('Outer'):
@@ -60,6 +60,25 @@ with CodeTimer('Outer'):
 
 Code block 'Inner' took: 2.382 ms
 Code block 'Outer' took: 10.466 ms
+```
+
+If you need to **retain the time taken**, you can do it with:
+```
+ct = CodeTimer()
+
+with ct:
+   slow_function()
+   
+ct.took # This contains the # of milliseconds
+```
+
+Finally, if you need to **turn off the printed statements**, use the `silent=False` argument
+
+```
+with CodeTimer(silent=True):
+   slow_function()
+   
+# There will be no printed output
 ```
 
 If you like this package, [upvote it on StackOverflow](https://stackoverflow.com/a/52749808/407108).
