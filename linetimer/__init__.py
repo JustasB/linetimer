@@ -2,7 +2,7 @@ import timeit
 
 class CodeTimer:
 
-    def __init__(self, name=None):
+    def __init__(self, name=None, silent=False):
         '''Allows giving indented blocks their own name. Blank by default'''
         self.name = name
 
@@ -16,6 +16,8 @@ class CodeTimer:
             if the indented lines raise an exception.
         '''
         self.took = (timeit.default_timer() - self.start) * 1000.0
-        print('Code block' + 
-              (" '"  + str(self.name) + "'" if self.name else '') + 
-              ' took: ' + str(self.took) + ' ms')
+        
+        if not silent:
+            print('Code block' + 
+                  (" '"  + str(self.name) + "'" if self.name else '') + 
+                  ' took: ' + str(self.took) + ' ms')
