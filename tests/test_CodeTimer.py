@@ -1,5 +1,6 @@
 from time import sleep
 
+
 def test_single_blank():
     from linetimer import CodeTimer
 
@@ -46,6 +47,7 @@ def test_two_named():
 
     assert ct2.took >= 2000.0
     assert ct2.name == name2
+
 
 def test_two_nested():
     from linetimer import CodeTimer
