@@ -62,6 +62,16 @@ Code block 'Inner' took: 2.382 ms
 Code block 'Outer' took: 10.466 ms
 ```
 
+To get time in a different unit, you can do this:
+```
+with CodeTimer('Block', unit='h'):
+   slow_function()
+   
+Code block 'Block' took: 2.382 h
+```
+
+Supported units are ms, s , m, h corresponding to milliseconds, seconds, minutes, hours.
+
 If you need to **retain the time taken**, you can do it with:
 ```
 ct = CodeTimer()
@@ -69,7 +79,7 @@ ct = CodeTimer()
 with ct:
    slow_function()
    
-ct.took # This contains the # of milliseconds
+ct.took # This contains the time taken as per the unit provided (milliseconds by default)
 ```
 
 Finally, if you need to **turn off the printed statements**, use the `silent=False` argument
