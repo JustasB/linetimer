@@ -1,12 +1,15 @@
 import timeit
 
+time_units = {'ms': 1, 's': 1000, 'm': 60 * 1000, 'h': 3600 * 1000}
+
 
 class CodeTimer:
 
-    def __init__(self, name=None, silent=False):
+    def __init__(self, name=None, silent=False, unit='ms'):
         """Allows giving indented blocks their own name. Blank by default"""
         self.name = name
         self.silent = silent
+        self.unit = unit
 
     def __enter__(self):
         """Start measuring at the start of indent"""
@@ -18,8 +21,11 @@ class CodeTimer:
             if the indented lines raise an exception.
         """
         self.took = (timeit.default_timer() - self.start) * 1000.0
+        self.took = self.took / time_units.get(self.unit, time_units['ms'])
 
         if not self.silent:
-            print('Code block' +
-                  (" '" + str(self.name) + "'" if self.name else '') +
-                  ' took: ' + str(self.took) + ' ms')
+            print('Code block{}took: {:.5f} {}'.format(
+                str(" '" + self.name + "' ") if self.name else ' ',
+                float(self.took),
+                str(self.unit))
+            )

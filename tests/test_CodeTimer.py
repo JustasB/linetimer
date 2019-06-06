@@ -70,3 +70,27 @@ def test_two_nested():
 
     assert ct2.took >= 2000.0
     assert ct2.name == name2
+
+
+def test_time_unit():
+    from linetimer import CodeTimer
+
+    unit1 = 's'
+
+    ct1 = CodeTimer('ct_' + unit1, unit=unit1)
+
+    with ct1:
+        sleep(1)
+
+    assert ct1.took >= 1
+    assert ct1.unit == unit1
+
+    unit2 = 'xyz'
+
+    ct2 = CodeTimer('ct_' + unit2, unit=unit2)
+
+    with ct2:
+        sleep(1)
+
+    assert ct2.took >= 1000
+    assert ct2.unit == unit2
