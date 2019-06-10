@@ -82,7 +82,7 @@ with ct:
 ct.took # This contains the time taken as per the unit provided (milliseconds by default)
 ```
 
-Finally, if you need to **turn off the printed statements**, use the `silent=False` argument
+Finally, if you need to **turn off the printed statements**, use the `silent=True` argument
 
 ```
 with CodeTimer(silent=True):
