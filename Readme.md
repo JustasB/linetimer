@@ -62,7 +62,7 @@ Code block 'Inner' took: 2.382 ms
 Code block 'Outer' took: 10.466 ms
 ```
 
-To get time in a different unit, you can do this:
+To **get the time taken in different units**, use the `unit` parameter:
 ```
 with CodeTimer('Block', unit='h'):
    slow_function()
