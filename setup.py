@@ -5,7 +5,7 @@ with open("Readme.md", "r") as fh:
 
 setuptools.setup(
     name="linetimer",
-    version="0.1.0",
+    version="0.1.2",
     author="Justas Birgiolas",
     author_email="justas@asu.edu",
     description="A small Python class to quickly measure the time taken while executing a block of indented lines",
