@@ -5,11 +5,12 @@ time_units = {'ms': 1, 's': 1000, 'm': 60 * 1000, 'h': 3600 * 1000}
 
 class CodeTimer:
 
-    def __init__(self, name=None, silent=False, unit='ms'):
+    def __init__(self, name=None, silent=False, unit='ms', logger_func=None):
         """Allows giving indented blocks their own name. Blank by default"""
         self.name = name
         self.silent = silent
         self.unit = unit
+        self.logger_func = logger_func
 
     def __enter__(self):
         """Start measuring at the start of indent"""
@@ -24,8 +25,9 @@ class CodeTimer:
         self.took = self.took / time_units.get(self.unit, time_units['ms'])
 
         if not self.silent:
-            print('Code block{}took: {:.5f} {}'.format(
+            log_str = 'Code block{}took: {:.5f} {}'.format(
                 str(" '" + self.name + "' ") if self.name else ' ',
                 float(self.took),
                 str(self.unit))
-            )
+
+            self.logger_func(log_str) if self.logger_func else print(log_str)
