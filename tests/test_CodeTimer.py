@@ -94,3 +94,44 @@ def test_time_unit():
 
     assert ct2.took >= 1000
     assert ct2.unit == unit2
+
+
+def test_logger_func(capsys):
+    import logging.config
+    from linetimer import CodeTimer
+
+    logger_config = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'standard': {
+                'format': '[%(levelname)s] - %(message)s'
+            },
+        },
+        'handlers': {
+            'default': {
+                'level': 'INFO',
+                'formatter': 'standard',
+                'class': 'logging.StreamHandler',
+                'stream': 'ext://sys.stdout',  # Default is stderr
+            },
+        },
+        'loggers': {
+            '': {  # root logger
+                'handlers': ['default'],
+                'level': 'INFO',
+                'propagate': True
+            }
+        }
+    }
+
+    logging.config.dictConfig(logger_config)
+
+    logger = logging.getLogger()
+
+    with CodeTimer('ct', unit='s', logger_func=logger.info):
+        sleep(1)
+
+    captured = capsys.readouterr()
+    assert captured.out.startswith("[INFO] - Code block 'ct' took: 1")
+    assert captured.out.endswith(' s\n')
