@@ -90,8 +90,8 @@ my_logger = logging.get_logger('xyz')
 with CodeTimer('Block', unit='h', logger_func = my_logger.info):
    slow_function()
 ```
-This will result in,
-```   
+This will log to an appropriate handler,
+```
 INFO - Code block 'Block' took: 2.382 h
 ```
 
