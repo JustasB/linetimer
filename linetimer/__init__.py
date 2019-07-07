@@ -30,4 +30,7 @@ class CodeTimer:
                 float(self.took),
                 str(self.unit))
 
-            self.logger_func(log_str) if self.logger_func else print(log_str)
+            if self.logger_func:
+                self.logger_func(log_str)
+            else:
+                print(log_str)
