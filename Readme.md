@@ -82,6 +82,19 @@ with ct:
 ct.took # This contains the time taken as per the unit provided (milliseconds by default)
 ```
 
+Sometimes you want to **use your own dedicated logger**, you can do it with:
+```
+import logging
+my_logger = logging.get_logger('xyz')
+
+with CodeTimer('Block', unit='h', logger_func = my_logger.info):
+   slow_function()
+```
+This will log to an appropriate handler,
+```
+INFO - Code block 'Block' took: 2.382 h
+```
+
 Finally, if you need to **turn off the printed statements**, use the `silent=True` argument
 
 ```
