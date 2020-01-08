@@ -95,13 +95,36 @@ This will log to an appropriate handler,
 INFO - Code block 'Block' took: 2.382 h
 ```
 
-Finally, if you need to **turn off the printed statements**, use the `silent=True` argument
+If you need to **turn off the printed statements**, use the `silent=True` argument
 
 ```
 with CodeTimer(silent=True):
    slow_function()
    
 # There will be no printed output
+```
+
+You can also use **function decorator** syntax, like this:
+
+```
+from linetimer import linetimer
+
+@linetimer()
+def my_function(a, b):
+   pass
+
+my_function('a', 'b')
+
+>>> Code block 'my_function' took x.yz ms
+
+@linetimer(show_args=True) # will print function parameters
+def my_function(a, b):
+   pass
+
+my_function('a', b='b')
+
+>>> Code block 'my_function('a', b='b') took x.yz ms
+
 ```
 
 If you like this package, [upvote it on StackOverflow](https://stackoverflow.com/a/52749808/407108).
