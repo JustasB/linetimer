@@ -7,9 +7,9 @@ def test_single_blank():
     ct = CodeTimer()
 
     with ct:
-        sleep(1)
+        sleep(0.1)
 
-    assert ct.took >= 1000.0
+    assert ct.took >= 100.0
 
 
 def test_single_named():
@@ -20,9 +20,9 @@ def test_single_named():
     ct = CodeTimer(name)
 
     with ct:
-        sleep(1)
+        sleep(0.1)
 
-    assert ct.took >= 1000.0
+    assert ct.took >= 100.0
     assert ct.name == name
 
 
@@ -35,17 +35,17 @@ def test_two_named():
     ct1 = CodeTimer(name1)
 
     with ct1:
-        sleep(1)
+        sleep(0.1)
 
     ct2 = CodeTimer(name2)
 
     with ct2:
-        sleep(2)
+        sleep(0.2)
 
-    assert ct1.took >= 1000.0
+    assert ct1.took >= 100.0
     assert ct1.name == name1
 
-    assert ct2.took >= 2000.0
+    assert ct2.took >= 200.0
     assert ct2.name == name2
 
 
@@ -58,17 +58,17 @@ def test_two_nested():
     ct1 = CodeTimer(name1)
 
     with ct1:
-        sleep(1)
+        sleep(0.1)
 
         ct2 = CodeTimer(name2)
 
         with ct2:
-            sleep(2)
+            sleep(0.2)
 
-    assert ct1.took >= 3000.0
+    assert ct1.took >= 300.0
     assert ct1.name == name1
 
-    assert ct2.took >= 2000.0
+    assert ct2.took >= 200.0
     assert ct2.name == name2
 
 
@@ -80,9 +80,9 @@ def test_time_unit():
     ct1 = CodeTimer('ct_' + unit1, unit=unit1)
 
     with ct1:
-        sleep(1)
+        sleep(0.1)
 
-    assert ct1.took >= 1
+    assert ct1.took >= 0.1
     assert ct1.unit == unit1
 
     unit2 = 'xyz'
@@ -90,9 +90,9 @@ def test_time_unit():
     ct2 = CodeTimer('ct_' + unit2, unit=unit2)
 
     with ct2:
-        sleep(1)
+        sleep(0.1)
 
-    assert ct2.took >= 1000
+    assert ct2.took >= 100
     assert ct2.unit == unit2
 
 
@@ -130,8 +130,69 @@ def test_logger_func(capsys):
     logger = logging.getLogger()
 
     with CodeTimer('ct', unit='s', logger_func=logger.info):
-        sleep(1)
+        sleep(0.1)
 
     captured = capsys.readouterr()
-    assert captured.out.startswith("[INFO] - Code block 'ct' took: 1")
+    assert captured.out.startswith("[INFO] - Code block 'ct' took: 0.1")
     assert captured.out.endswith(' s\n')
+
+
+log_message = None
+
+def test_decorator():
+    from linetimer import linetimer
+
+    def save_message(msg):
+        global log_message
+        log_message = msg
+
+    @linetimer(logger_func=save_message)
+    def foo_dont_show_args(a, b='default'):
+        pass
+
+    foo_dont_show_args(1)
+    assert log_message.startswith("Code block 'foo_dont_show_args' took")
+
+    @linetimer(show_args=True, logger_func=save_message)
+    def foo_show_args(a='default_a', b='default'):
+        pass
+
+    foo_show_args(1)
+    assert log_message.startswith("Code block 'foo_show_args(1)' took")
+
+    foo_show_args('a', 'b')
+    assert log_message.startswith("Code block 'foo_show_args('a', 'b')' took")
+
+    foo_show_args(1, b='b')
+    assert log_message.startswith("Code block 'foo_show_args(1, b='b')' took")
+
+    foo_show_args(b='b')
+    assert log_message.startswith("Code block 'foo_show_args(b='b')' took")
+
+    foo_show_args([None],{})
+    assert log_message.startswith("Code block 'foo_show_args([None], {})' took")
+
+    @linetimer(name='my name', logger_func=save_message)
+    def foo_show_args(a, b='default'):
+        pass
+
+    foo_show_args(1)
+    assert log_message.startswith("Code block 'my name' took")
+
+    class FooClass:
+        @linetimer(show_args=True, logger_func=save_message)
+        def foo_show_args(self, a, b='default'):
+            pass
+
+        def __repr__(self):
+            return '<FooClass>'
+
+    fc = FooClass()
+    fc.foo_show_args('a', 'b')
+    assert log_message.startswith("Code block 'foo_show_args(<FooClass>, 'a', 'b')' took")
+
+
+
+
+
+
