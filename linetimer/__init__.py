@@ -1,4 +1,5 @@
 import timeit
+from typing import Union, Optional
 
 UNIT_NANOSECONDS = 'ns'
 UNIT_MICROSECONDS = 'us'
@@ -21,10 +22,11 @@ class CodeTimer:
 
     def __init__(
             self,
-            name=None,
-            silent=False,
-            unit=UNIT_MILLISECONDS,
-            logger_func=None
+            name: str = None,
+            silent: bool = False,
+            unit: str = UNIT_MILLISECONDS,
+            logger_func=None,
+            threshold: Optional[Union[int, float]] = None
     ):
         """
         :param name: A custom name given to a code block
@@ -33,13 +35,17 @@ class CodeTimer:
         :param logger_func: A function that takes a string parameter
                 that is called at the end of the indented block.
                 If specified, messages will not be printed to console.
+        :param threshold: A integer or float value. If time taken by code block
+                took greater than or equal value, only then log.
+                If None, will bypass this parameter.
         """
 
         self.name = name
         self.silent = silent
-        self.unit = unit
+        self.unit = unit if unit else UNIT_MILLISECONDS
         self.logger_func = logger_func
         self.log_str = None
+        self.threshold = threshold
 
     def __enter__(self):
         """
@@ -58,20 +64,24 @@ class CodeTimer:
         This will run even if the indented lines raise an exception.
         """
 
-        # Record elapsed time
+        # Record elapsed time in milliseconds (seconds * 1000 = milliseconds)
         self.took = (timeit.default_timer() - self.start) * 1000.0
 
-        # Convert time units
-        self.took = self.took / time_units.get(self.unit, time_units['ms'])
+        # Convert time into given units
+        self.took = (
+                self.took
+                / time_units.get(self.unit, time_units[UNIT_MILLISECONDS])
+        )
 
-        if not self.silent:
+        if not self.silent and (
+                not self.threshold or self.took <= self.threshold
+        ):
 
             # Craft a log message
             self.log_message = 'Code block{}took: {:.5f} {}'.format(
                 str(" '" + self.name + "' ") if self.name else ' ',
                 float(self.took),
                 str(self.unit))
-
 
             if self.logger_func:
                 self.logger_func(self.log_message)
@@ -86,7 +96,8 @@ def linetimer(
         name: str = None,
         silent: bool = False,
         unit: str = UNIT_MILLISECONDS,
-        logger_func=None
+        logger_func=None,
+        threshold: Optional[Union[int, float]] = None
 ):
     """
     Decorating a function will log how long it took to execute each function call
@@ -110,6 +121,9 @@ def linetimer(
     :param silent: same as CodeTimer
     :param unit: same as CodeTimer
     :param logger_func: same as CodeTimer
+    :param threshold: A integer or float value. If time taken by code block
+                took greater than or equal value, only then log.
+                If None, will bypass this parameter.
     :return: CodeTimer decorated function
     """
 
@@ -149,7 +163,8 @@ def linetimer(
                 name=block_name,
                 silent=silent,
                 unit=unit,
-                logger_func=logger_func
+                logger_func=logger_func,
+                threshold=threshold
             ):
                 return func(*args, **kwargs)
 
