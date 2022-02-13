@@ -1,16 +1,33 @@
 import timeit
 
-time_units = {'ms': 1, 's': 1000, 'm': 60 * 1000, 'h': 3600 * 1000}
+UNIT_MILLISECONDS = 'ms'
+UNIT_SECONDS = 's'
+UNIT_MINUTES = 'm'
+UNIT_HOURS = 'h'
+
+time_units = {
+    'ms': 1,
+    's': 1000,
+    'm': 60 * 1000,
+    'h': 3600 * 1000
+}
 
 
 class CodeTimer:
 
-    def __init__(self, name=None, silent=False, unit='ms', logger_func=None):
+    def __init__(
+            self,
+            name=None,
+            silent=False,
+            unit=UNIT_MILLISECONDS,
+            logger_func=None
+    ):
         """
         :param name: A custom name given to a code block
         :param silent: When True, does not print or log any messages
         :param unit: Units to measure time. One of ['ms', 's', 'm', 'h']
-        :param logger_func: A function that takes a string parameter that is called at the end of the indented block.
+        :param logger_func: A function that takes a string parameter
+                that is called at the end of the indented block.
                 If specified, messages will not be printed to console.
         """
 
@@ -33,7 +50,8 @@ class CodeTimer:
 
     def __exit__(self, exc_type, exc_value, traceback):
         """
-        Stop measuring at the end of indent. This will run even if the indented lines raise an exception.
+        Stop measuring at the end of indent.
+        This will run even if the indented lines raise an exception.
         """
 
         # Record elapsed time
@@ -59,7 +77,13 @@ class CodeTimer:
 
 
 # function decorator style
-def linetimer(show_args=False, name=None, silent=False, unit='ms', logger_func=None):
+def linetimer(
+        show_args=False,
+        name: str = None,
+        silent: bool = False,
+        unit: str = UNIT_MILLISECONDS,
+        logger_func=None
+):
     """
     Decorating a function will log how long it took to execute each function call
 
@@ -75,8 +99,10 @@ def linetimer(show_args=False, name=None, silent=False, unit='ms', logger_func=N
     def foo():
         pass
 
-    :param show_args: When True, will print the parameters passed into the decorated function
-    :param name: If None, uses the name of the function and show_args value. Otherwise, same as CodeTimer.
+    :param show_args: When True, will print the parameters passed
+            into the decorated function
+    :param name: If None, uses the name of the function and show_args value.
+            Otherwise, same as CodeTimer.
     :param silent: same as CodeTimer
     :param unit: same as CodeTimer
     :param logger_func: same as CodeTimer
@@ -103,7 +129,9 @@ def linetimer(show_args=False, name=None, silent=False, unit='ms', logger_func=N
 
                     # append kwargs
                     if len(kwargs.keys()) > 0:
-                        block_name += ', '.join([k + '=' + to_str(v) for k, v in kwargs.items()])
+                        block_name += ', '.join([
+                            k + '=' + to_str(v) for k, v in kwargs.items()
+                        ])
 
                     block_name += ')'
 
@@ -113,7 +141,12 @@ def linetimer(show_args=False, name=None, silent=False, unit='ms', logger_func=N
             else:
                 block_name = name
 
-            with CodeTimer(name=block_name, silent=silent, unit=unit, logger_func=logger_func):
+            with CodeTimer(
+                name=block_name,
+                silent=silent,
+                unit=unit,
+                logger_func=logger_func
+            ):
                 return func(*args, **kwargs)
 
         return wrapper
