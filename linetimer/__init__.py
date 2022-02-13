@@ -1,11 +1,15 @@
 import timeit
 
+UNIT_NANOSECONDS = 'ns'
+UNIT_MICROSECONDS = 'us'
 UNIT_MILLISECONDS = 'ms'
 UNIT_SECONDS = 's'
 UNIT_MINUTES = 'm'
 UNIT_HOURS = 'h'
 
 time_units = {
+    'ns': 1/1000000,
+    'us': 1/1000,
     'ms': 1,
     's': 1000,
     'm': 60 * 1000,
