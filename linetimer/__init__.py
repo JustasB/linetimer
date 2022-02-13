@@ -9,12 +9,12 @@ UNIT_MINUTES = 'm'
 UNIT_HOURS = 'h'
 
 time_units = {
-    'ns': 1/1000000,
-    'us': 1/1000,
-    'ms': 1,
-    's': 1000,
-    'm': 60 * 1000,
-    'h': 3600 * 1000
+    UNIT_NANOSECONDS: 1/1000000,
+    UNIT_MICROSECONDS: 1/1000,
+    UNIT_MILLISECONDS: 1,
+    UNIT_SECONDS: 1000,
+    UNIT_MINUTES: 60 * 1000,
+    UNIT_HOURS: 3600 * 1000
 }
 
 
@@ -31,7 +31,8 @@ class CodeTimer:
         """
         :param name: A custom name given to a code block
         :param silent: When True, does not print or log any messages
-        :param unit: Units to measure time. One of ['ms', 's', 'm', 'h']
+        :param unit: Units to measure time.
+                One of ['ns', 'us', 'ms', 's', 'm', 'h']
         :param logger_func: A function that takes a string parameter
                 that is called at the end of the indented block.
                 If specified, messages will not be printed to console.
@@ -118,9 +119,11 @@ def linetimer(
             into the decorated function
     :param name: If None, uses the name of the function and show_args value.
             Otherwise, same as CodeTimer.
-    :param silent: same as CodeTimer
-    :param unit: same as CodeTimer
-    :param logger_func: same as CodeTimer
+    :param silent: When True, does not print or log any messages
+    :param unit: Units to measure time. One of ['ns', 'us', 'ms', 's', 'm', 'h']
+    :param logger_func: A function that takes a string parameter
+                that is called at the end of the indented block.
+                If specified, messages will not be printed to console.
     :param threshold: A integer or float value. If time taken by code block
                 took greater than or equal value, only then log.
                 If None, will bypass this parameter.
