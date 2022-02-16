@@ -32,7 +32,7 @@ jobs:
       - checkout
       - run:
           name: Run tests
-          command: pip install pytest-cov codecov; python setup.py develop; py.test --cov=linetimer tests/
+          command: pip install pytest-cov codecov; python setup.py develop; py.test --cov=linetimer tests/; ls -l
       - codecov/upload
 
 # Invoke jobs via workflows
