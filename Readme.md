@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/JustasB/linetimer.svg?branch=master)](https://travis-ci.com/JustasB/linetimer)
+[![Build Status](https://circleci.com/gh/JustasB/linetimer.svg?style=shield)](https://circleci.com/gh/JustasB/linetimer)
 [![codecov](https://codecov.io/gh/JustasB/linetimer/branch/master/graph/badge.svg)](https://codecov.io/gh/JustasB/linetimer)
 [![PyPI version](https://badge.fury.io/py/linetimer.svg)](https://badge.fury.io/py/linetimer)
 
