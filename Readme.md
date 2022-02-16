@@ -70,7 +70,7 @@ with CodeTimer('Block', unit='h'):
 Code block 'Block' took: 2.382 h
 ```
 
-Supported units are ms, s , m, h corresponding to milliseconds, seconds, minutes, hours.
+Supported units are ns, us, ms, s , m, h corresponding to nanoseconds, microseconds, milliseconds, seconds, minutes, hours.
 
 If you need to **retain the time taken**, you can do it with:
 ```
@@ -124,6 +124,56 @@ def my_function(a, b):
 my_function('a', b='b')
 
 >>> Code block 'my_function('a', b='b') took x.yz ms
+
+```
+
+Now you can add threshold to log only necessary statements, which have execution
+time greater than equal to given threshold value.
+
+By default, threshold is set to 'None', i.e., no threshold.
+
+Threshold value is set in specified unit.
+For e.g., To set threshold value to 1 second, 
+- unit='ns' => threshold=1000000000
+- unit='us' => threshold=1000000
+- unit='ms' => threshold=1000
+- unit='s' => threshold=1
+- unit='m' => threshold=1/60
+- unit='h' => threshold=1/3600
+```
+from linetimer import linetimer
+
+@linetimer(threshold=None)
+def my_function():
+   pass
+
+my_function()
+
+>>> Code block 'my_function' took x.yz ms
+
+@linetimer(threshold=1000) # will log only when execution time is >= 1000 milliseconds
+def my_function():
+   pass
+
+my_function()
+
+>>> Code block 'my_function' took x.yz ms
+
+@linetimer(unit='us', threshold=1000) # will log only when execution time is >= 1000 microseconds
+def my_function():
+   pass
+
+my_function()
+
+>>> Code block 'my_function' took x.yz us
+
+@linetimer(unit='ns', threshold=1000) # will log only when execution time is >= 1000 nanoseconds
+def my_function():
+   pass
+
+my_function()
+
+>>> Code block 'my_function' took x.yz ns
 
 ```
 
