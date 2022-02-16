@@ -137,6 +137,94 @@ def test_logger_func(capsys):
     assert captured.out.endswith(' s\n')
 
 
+def test_codetimer_with_unit_as_microseconds(capsys):
+    from linetimer import CodeTimer
+
+    name = "name"
+
+    ct = CodeTimer(name, unit='us')
+
+    with ct:
+        sleep(0.11)
+
+    assert ct.took >= 100000.0
+    assert ct.name == name
+
+
+def test_codetimer_with_unit_as_nanoseconds(capsys):
+    from linetimer import CodeTimer
+
+    name = "name"
+
+    ct = CodeTimer(name, unit='ns')
+
+    with ct:
+        sleep(0.11)
+
+    assert ct.took >= 100000000.0
+    assert ct.name == name
+
+
+def test_codetimer_with_threshold_in_microseconds_logs_message(capsys):
+    from linetimer import CodeTimer
+
+    name = "name"
+
+    ct = CodeTimer(name, unit='us', threshold=100000)
+
+    with ct:
+        sleep(0.11)
+
+    assert ct.took >= 100000.0
+    assert ct.name == name
+    assert ct.log_message.strip()
+
+
+def test_codetimer_with_threshold_in_nanoseconds_logs_message(capsys):
+    from linetimer import CodeTimer
+
+    name = "name"
+
+    ct = CodeTimer(name, unit='ns', threshold=100000000)
+
+    with ct:
+        sleep(0.11)
+
+    assert ct.took >= 100000000.0
+    assert ct.name == name
+    assert ct.log_message.strip()
+
+
+def test_codetimer_with_threshold_in_microseconds_not_logs_message(capsys):
+    from linetimer import CodeTimer
+
+    name = "name"
+
+    ct = CodeTimer(name, unit='us', threshold=100000)
+
+    with ct:
+        sleep(0.01)
+
+    assert ct.took < 100000.0
+    assert ct.name == name
+    assert not ct.log_message.strip()
+
+
+def test_codetimer_with_threshold_in_nanoseconds_not_logs_message(capsys):
+    from linetimer import CodeTimer
+
+    name = "name"
+
+    ct = CodeTimer(name, unit='ns', threshold=100000000)
+
+    with ct:
+        sleep(0.01)
+
+    assert ct.took < 100000000.0
+    assert ct.name == name
+    assert not ct.log_message.strip()
+
+
 log_message = None
 
 def test_decorator():
