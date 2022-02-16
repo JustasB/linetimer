@@ -75,7 +75,7 @@ class CodeTimer:
         )
 
         if not self.silent and (
-                not self.threshold or self.took <= self.threshold
+                not self.threshold or self.threshold <= self.took
         ):
 
             # Craft a log message
