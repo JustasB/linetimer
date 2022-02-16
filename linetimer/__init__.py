@@ -47,6 +47,7 @@ class CodeTimer:
         self.logger_func = logger_func
         self.log_str = None
         self.threshold = threshold
+        self.log_message = ''
 
     def __enter__(self):
         """
